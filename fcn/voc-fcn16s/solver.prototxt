@@ -3,28 +3,28 @@ train_net: "train.prototxt"
 test_net: "val.prototxt"
 
 # Test on X batches each time we test. #1111
-test_iter: 200
+test_iter: 1000
 
 # Test after every X training iterations
 test_interval: 999999999  
 
-# Display the current training loss and accuracy every 1000 iterations. #20
-display: 20
+# Display the current training loss and accuracy every X iterations. #20
+display: 60
 
 # Display the loss averaged over the last average_loss iterations #20
-average_loss: 20
+average_loss: 60
 
 # Set `lr_policy` to define how the learning rate changes during training.
 lr_policy: "fixed"
 
-# lr for unnormalized softmax
+# lr for unnormalized softmax #1e-14 original  #1e-4 dena
 base_lr: 1e-14
 
 # Set momentum to accelerate learning by taking weighted average of current and previous updates.
-# high momentum
-momentum: 0.99
+# high momentum #0.99
+momentum: 0.9
 
-# no gradient accumulation (accumulates gradient when updating -- can get same results as with higher batch size)
+# no gradient accumulation (accumulates gradient when updating -- can get same results as with higher batch size) #1 original #20 dena
 iter_size: 1
 
 # no. of times to update the net (training iterations) -Train on X batches-
@@ -35,6 +35,6 @@ weight_decay: 0.0005
 
 # Snapshots are files used to store networks we've trained.
 # We'll snapshot every X iterations #4000
-snapshot: 200
+snapshot: 2000
 snapshot_prefix: "../../../data/fcn_training/snapshot/train"
 test_initialization: false

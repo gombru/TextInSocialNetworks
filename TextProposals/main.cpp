@@ -23,7 +23,7 @@ using namespace cv;
 
 #define PYRAMIDS     0 // Use spatial pyramids
 #define CUE_D        1 // Use Diameter grouping cue
-#define CUE_FGI      0 // Use ForeGround Intensity grouping cue
+#define CUE_FGI      1 // Use ForeGround Intensity grouping cue
 #define CUE_BGI      0 // Use BackGround Intensity grouping cue
 #define CUE_G        0 // Use Gradient magnitude grouping cue
 #define CUE_S        0 // Use Stroke width grouping cue

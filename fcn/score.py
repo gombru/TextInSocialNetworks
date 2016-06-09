@@ -12,7 +12,7 @@ def fast_hist(a, b, n):
     k = (a >= 0) & (a < n)
     return np.bincount(n * a[k].astype(int) + b[k], minlength=n**2).reshape(n, n)
 
-def compute_hist(net, save_dir, dataset, layer='score_conv', gt='label'):
+def compute_hist(net, save_dir, dataset, layer='score', gt='label'):
     n_cl = net.blobs[layer].channels
     if save_dir:
         os.mkdir(save_dir)
@@ -31,13 +31,13 @@ def compute_hist(net, save_dir, dataset, layer='score_conv', gt='label'):
         loss += net.blobs['loss_conv'].data.flat[0]
     return hist, loss / len(dataset)
 
-def seg_tests(solver, save_format, dataset, layer='score_conv', gt='label'):
+def seg_tests(solver, save_format, dataset, layer='score', gt='label'):
     print '>>>', datetime.now(), 'Begin seg tests'
     solver.test_nets[0].share_with(solver.net)
     [hist, loss, acc, iu] = do_seg_tests(solver.test_nets[0], solver.iter, save_format, dataset, layer, gt)
     return loss, acc, iu
 
-def do_seg_tests(net, iter, save_format, dataset, layer='score_conv', gt='label'):
+def do_seg_tests(net, iter, save_format, dataset, layer='score', gt='label'):
     n_cl = net.blobs[layer].channels
     if save_format:
         save_format = save_format.format(iter)

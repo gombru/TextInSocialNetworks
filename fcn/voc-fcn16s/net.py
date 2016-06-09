@@ -24,8 +24,11 @@ def fcn(split):
     #     pydata_params['voc_dir'] = '../../data/pascal/VOC2011'
     #     pylayer = 'VOCSegDataLayer'
 
-    pydata_params['icdar_dir'] = '../../../data/icdar'
-    pylayer = 'ICDARDataLayer'
+    # pydata_params['icdar_dir'] = '../../../data/icdar'
+    # pylayer = 'ICDARDataLayer'
+
+    pydata_params['coco_dir'] = '../../../data/coco-text'
+    pylayer = 'COCODataLayer'
 
 
     n.data, n.label = L.Python(module='layers', layer=pylayer,
@@ -78,38 +81,58 @@ def fcn(split):
     #         bias_term=False),
     #     param=[dict(lr_mult=0)])
 
+
     n.score_fr_conv = L.Convolution(n.drop7, num_output=2, kernel_size=1, pad=0,
         param=[dict(lr_mult=1, decay_mult=1), dict(lr_mult=2, decay_mult=0)])
+    # n.score_fr_conv = L.Convolution(n.drop7, num_output=2, kernel_size=1, pad=0, weight_filler=dict(type='gaussian',std=0.01), bias_filler=dict(type='constant',value=0),
+    #     param=[dict(lr_mult=1, decay_mult=1), dict(lr_mult=2, decay_mult=0)])
+
+
     n.upscore2_conv = L.Deconvolution(n.score_fr_conv ,
         convolution_param=dict(num_output=2, kernel_size=4, stride=2,
             bias_term=False),
         param=[dict(lr_mult=0)])
+    # n.upscore2_conv = L.Deconvolution(n.score_fr_conv ,
+    #     convolution_param=dict(num_output=2, kernel_size=4, stride=2,
+    #         bias_term=False, group=2,weight_filler=dict(type='constant',value=1)),
+    #     param=[dict(lr_mult=0)])
 
     n.score_pool4_conv = L.Convolution(n.pool4, num_output=2, kernel_size=1, pad=0,
         param=[dict(lr_mult=1, decay_mult=1), dict(lr_mult=2, decay_mult=0)])
-    n.score_pool4c_conv = crop(n.score_pool4_conv , n.upscore2_conv )
-    n.fuse_pool4_conv = L.Eltwise(n.upscore2_conv , n.score_pool4c_conv ,
+    # n.score_pool4_conv = L.Convolution(n.pool4, num_output=2, kernel_size=1, pad=0, weight_filler=dict(type='gaussian',std=0.01), bias_filler=dict(type='constant',value=0),
+    #     param=[dict(lr_mult=1, decay_mult=1), dict(lr_mult=2, decay_mult=0)])
+
+    n.score_pool4c = crop(n.score_pool4_conv , n.upscore2_conv )
+
+    n.fuse_pool4 = L.Eltwise(n.upscore2_conv , n.score_pool4c ,
             operation=P.Eltwise.SUM)
-    n.upscore16_conv = L.Deconvolution(n.fuse_pool4_conv ,
+
+
+    n.upscore16_conv = L.Deconvolution(n.fuse_pool4 ,
         convolution_param=dict(num_output=2, kernel_size=32, stride=16,
             bias_term=False),
         param=[dict(lr_mult=0)])
+    # n.upscore16_conv = L.Deconvolution(n.fuse_pool4 ,
+    #     convolution_param=dict(num_output=2, kernel_size=32, stride=16,
+    #         bias_term=False,group=2,weight_filler=dict(type='constant',value=1)),
+    #     param=[dict(lr_mult=0)])
 
-    n.score_conv  = crop(n.upscore16_conv , n.data)
-    n.loss_conv  = L.SoftmaxWithLoss(n.score_conv , n.label,
+    n.score  = crop(n.upscore16_conv , n.data)
+
+    n.loss  = L.SoftmaxWithLoss(n.score , n.label,
             loss_param=dict(normalize=False, ignore_label=255))
 
     return n.to_proto()
 
 def make_net():
     with open('train.prototxt', 'w') as f:
-        f.write(str(fcn('train')))
+        f.write(str(fcn('train-onlyLegibleText')))
 
     # with open('val.prototxt', 'w') as f:
     #     f.write(str(fcn('seg11valid')))
 
     with open('val.prototxt', 'w') as f:
-        f.write(str(fcn('val')))
+        f.write(str(fcn('val-onlyLegibleText')))
 
 if __name__ == '__main__':
     make_net()

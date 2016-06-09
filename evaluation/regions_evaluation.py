@@ -10,16 +10,22 @@ import coco_text
 import numpy as np
 
 ct = coco_text.COCO_Text('../../data/coco/coco-text-annotations/COCO_Text.json')
-score_thresholds = [-1, 0, 1, 2]
+score_thresholds = np.arange(0,1.1,0.05)
 objects_detected = np.zeros((score_thresholds.__len__()))
 objects_proposed = np.zeros((score_thresholds.__len__()))
 
 for s in range(0,score_thresholds.__len__()):
+        print 'Computing data for score threshold ' + str(score_thresholds[s]) + '...'
         regions_data = []
+        cont = 0
         for file in glob.glob("../../data/coco-text/regions_evaluation/*.txt"):
+
+            cont +=  1
+            if cont % 100 is 0:
+                print cont
+
             data = numpy.loadtxt(file,delimiter=" ")
             for r in range (0,len(data)):
-
                 #If region score is above threshold, consider it
                 if(data[r,4] > score_thresholds[s]):
                     region_data = {
@@ -48,12 +54,18 @@ for s in range(0,score_thresholds.__len__()):
                 objects_detected[s] = float(our_detections['true_positives'].__len__()) / (our_detections['true_positives'].__len__() + our_detections['false_negatives'].__len__())
             # objects_proposed[s] = our_detections['true_positives'].__len__() + our_detections['false_positives'].__len__()
             objects_proposed[s] = len(regions_data)
+
 #Plot object proposals
+objects_proposed = objects_proposed[::-1]
+objects_detected = objects_detected[::-1]
+
 plt.plot(objects_proposed, objects_detected)
-plt.axis([0, objects_detected.max(), 0, 1])
+plt.ylim(0, 1)
+plt.xscale('log')
 plt.xlabel('# of proposals')
 plt.ylabel('Detection rate')
 plt.show()
+
 print 'Done'
 
 

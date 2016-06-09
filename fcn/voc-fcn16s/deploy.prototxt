@@ -526,22 +526,22 @@ layer {
   }
 }
 layer {
-  name: "score_pool4c_conv"
+  name: "score_pool4c"
   type: "Crop"
   bottom: "score_pool4_conv"
   bottom: "upscore2_conv"
-  top: "score_pool4c_conv"
+  top: "score_pool4c"
   crop_param {
     axis: 2
     offset: 5
   }
 }
 layer {
-  name: "fuse_pool4_conv_conv"
+  name: "fuse_pool4"
   type: "Eltwise"
   bottom: "upscore2_conv"
-  bottom: "score_pool4c_conv"
-  top: "fuse_pool4_conv"
+  bottom: "score_pool4c"
+  top: "fuse_pool4"
   eltwise_param {
     operation: SUM
   }
@@ -549,7 +549,7 @@ layer {
 layer {
   name: "upscore16_conv"
   type: "Deconvolution"
-  bottom: "fuse_pool4_conv"
+  bottom: "fuse_pool4"
   top: "upscore16_conv"
   param {
     lr_mult: 0
@@ -562,11 +562,11 @@ layer {
   }
 }
 layer {
-  name: "score_conv"
+  name: "score"
   type: "Crop"
   bottom: "upscore16_conv"
   bottom: "data"
-  top: "score_conv"
+  top: "score"
   crop_param {
     axis: 2
     offset: 27

@@ -1,6 +1,6 @@
 import sys
 sys.path.append('/home/imatge/caffe-master/python')
-sys.path.append('/home/imatge/caffe-master/code')
+sys.path.append('/home/imatge/caffe-master/code/fcn')
 import caffe
 import surgery, score
 import os
@@ -37,8 +37,8 @@ print(solver.net.blobs['data'].data.shape)
 
 
 # init vars to train and  store results
-size_intervals = 200 #4000 No of iterations between each validation and plot
-num_intervals = 2  #25 No of times to validate and plot
+size_intervals = 2000 #4000 No of iterations between each validation and plot
+num_intervals = 60  #25 No of times to validate and plot
 total_iterations = size_intervals * num_intervals # 25*4000 = 100.000 total iterations
 
 # set plots data
@@ -57,14 +57,16 @@ ax2.set_autoscaley_on(False)
 ax2.set_ylim([0, 1])
 
 for it in range(num_intervals):
+
     solver.step(size_intervals)
     # solver.net.forward()
+
     # Test with validation set every 'size_intervals' iterations
-    [loss, acc, iu] = score.seg_tests(solver, False, val, layer='score_conv')
+    [loss, acc, iu] = score.seg_tests(solver, False, val, layer='score')
     val_acc[it] = acc
     val_iu[it] = iu
     val_loss[it] = loss
-    train_loss[it] = solver.net.blobs['loss_conv'].data
+    train_loss[it] = solver.net.blobs['loss'].data
 
     # Plot results
     if it > 0:

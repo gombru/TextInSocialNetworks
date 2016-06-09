@@ -44,7 +44,7 @@ int main()
   string evaluation_filename(directory + "images_evaluation/images_scores.txt");
   imevfile.open (evaluation_filename.c_str());
   
-  dpdf = opendir((directory + "miniTrain/").c_str());
+  dpdf = opendir((directory + "val2014-withoutIllegible/").c_str());
   if (dpdf != NULL){
     while (epdf = readdir(dpdf)){
 	filename = epdf->d_name;
@@ -54,7 +54,7 @@ int main()
 	 if (filename.compare(filename.length()-4,filename.length(),".jpg")){
 	  continue;}  
 
-	img = imread(directory + "miniTrain/" + filename);
+	img = imread(directory + "val2014-withoutIllegible/" + filename);
 	cout << "\nImage read: " << filename;
 	ComputeRegions segmentator;
 	vector<HCluster> regions_info;
@@ -72,7 +72,7 @@ int main()
 	      break;
 	      
 	    case 1: //Compute region score from heatmap
-	      heatmap = imread(directory + "heatmaps/" + filename.substr(0, filename.length() - 4) + ".png", CV_LOAD_IMAGE_GRAYSCALE);
+	      heatmap = imread(directory + "heatmaps-104000/" + filename.substr(0, filename.length() - 4) + ".png", CV_LOAD_IMAGE_GRAYSCALE);
 	      for (int k=0; k<regions_info.size(); k++)
 	      {
 		Mat regionHeatMap;
@@ -122,6 +122,7 @@ int main()
 	}
      }
   }
+  cout << "\nDone";	
   imevfile.close();
 }
 
