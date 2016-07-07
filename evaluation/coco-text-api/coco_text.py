@@ -191,7 +191,7 @@ class COCO_Text:
         res = COCO_Text()
         res.dataset['imgs'] = [img for img in self.dataset['imgs']]
 
-        print 'Loading and preparing results...     '
+        # print 'Loading and preparing results...     '
         time_t = datetime.datetime.utcnow()
         if type(resFile) == str:
             anns = json.load(open(resFile))
@@ -217,6 +217,6 @@ class COCO_Text:
             ann['id'] = id
             res.anns[id] = ann
             res.imgToAnns[ann['image_id']].append(id)
-        print 'DONE (t=%0.2fs)'%((datetime.datetime.utcnow() - time_t).total_seconds())
+        #print 'DONE (t=%0.2fs)'%((datetime.datetime.utcnow() - time_t).total_seconds())
 
         return res

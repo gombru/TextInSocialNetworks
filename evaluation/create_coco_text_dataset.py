@@ -12,7 +12,7 @@ ct = coco_text.COCO_Text('../../data/coco/coco-text-annotations/COCO_Text.json')
 #imgIds = ct.getImgIds(imgIds=ct.val)
 
 #Only legible text images
-#imgIds = ct.getImgIds(imgIds=ct.val, catIds=[('legibility', 'illegible')])
+imgIds = ct.getImgIds(imgIds=ct.val, catIds=[('legibility', 'legible')])
 
 #Legible + illegibleT
 # Retrieve images with text (legible + illegible)
@@ -23,17 +23,18 @@ ct = coco_text.COCO_Text('../../data/coco/coco-text-annotations/COCO_Text.json')
 # imgIds = imgIds1 + imgIds2
 
 #All but non-legible text images
-imgIds_all = ct.getImgIds(imgIds=ct.val)
-imgIds_illegible = ct.getImgIds(imgIds=ct.val,
-                       catIds=[('legibility', 'illegible')])
-imgIds = list(set(imgIds_all) - set(imgIds_illegible))
+# imgIds_all = ct.getImgIds(imgIds=ct.val)
+# imgIds_illegible = ct.getImgIds(imgIds=ct.val,
+#                        catIds=[('legibility', 'illegible')])
+# imgIds = list(set(imgIds_all) - set(imgIds_illegible))
 
 
 dataDir = '/home/imatge/caffe-master/data/coco-text/val2014/'
-destDataDir = '/home/imatge/caffe-master/data/coco-text/val2014-withoutIllegible/'
+destDataDir = '/home/imatge/caffe-master/data/coco-text/val-onlyLegibleText-notEnglish/'
 
 for x in range(0,len(imgIds)):
     img = ct.loadImgs(imgIds[x])[0]
     # print dataDir + img['file_name']
     shutil.copy2(dataDir + img['file_name'], destDataDir + img['file_name'])
+
 print 'Done'

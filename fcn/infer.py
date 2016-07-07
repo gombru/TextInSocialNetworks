@@ -31,13 +31,19 @@ net.blobs['data'].data[...] = in_
 # run net and take argmax for prediction
 net.forward()
 
+
 hmap_0 = net.blobs['score_conv'].data[0][0,:,:]
 hmap_1 = net.blobs['score_conv'].data[0][1,:,:]
 hmap_0 = np.exp(hmap_0)
 hmap_1 = np.exp(hmap_1)
 hmap_softmax = hmap_1 / (hmap_0 + hmap_1)
 
-# Save color heatmap
+# Save SoftMax heatmap
+hmap_softmax_2save = (255.0 * hmap_softmax).astype(np.uint8)
+hmap_softmax_2save = Image.fromarray(hmap_softmax_2save)
+hmap_softmax_2save.save('heatmap.jpg')
+
+# Save SoftMax color heatmap
 fig = plt.figure(frameon=False)
 fig.set_size_inches(5.12,5.12)
 ax = plt.Axes(fig, [0., 0., 1., 1.])
@@ -46,15 +52,12 @@ fig.add_axes(ax)
 ax.imshow(hmap_softmax, aspect='auto', cmap="jet")
 fig.savefig('heatmap-color.jpg')
 
-#Save grayscale heatmap
-toimage(hmap_softmax, cmin=0.0, cmax=np.max(hmap_softmax)).save('heatmap-softmax.png')
-
 #Save normalized heatmap
-heatmap = net.blobs['score_conv'].data[0][1,:,:]
-if heatmap.min() < 0:
-    heatmap = heatmap - heatmap.min()
-heatmap = (255.0 / heatmap.max() * (heatmap)).astype(np.uint8)
-heatmap = Image.fromarray(heatmap)
-heatmap.save('heatmap-normalized' + '.png')
+# heatmap = net.blobs['score_conv'].data[0][1,:,:]
+# if heatmap.min() < 0:
+#     heatmap = heatmap - heatmap.min()
+# heatmap = (255.0 / heatmap.max() * (heatmap)).astype(np.uint8)
+# heatmap = Image.fromarray(heatmap)
+# heatmap.save('heatmap-normalized' + '.png')
 
 print 'Done'

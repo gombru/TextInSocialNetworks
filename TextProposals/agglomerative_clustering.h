@@ -1,6 +1,6 @@
 #ifndef AGGLOMERATIVE_CLUSTERING_H
 #define AGGLOMERATIVE_CLUSTERING_H
-#define _TRAIN_
+//#define _TRAIN_
 
 #include <vector>
 
@@ -30,6 +30,10 @@ typedef struct {
     int node2;  // child
     cv::Rect rect;  // each group defines a bounding box
     double probability;
+    double probability2;
+    double probability3;
+
+    
     float  cnn_probability;
     string cnn_recognition;
     int    nfa;	// the number of false alarms for this merge (we are using only the nfa exponent so this is an int)
@@ -118,7 +122,7 @@ public:
 
 private:
     vector<Region> &regions;
-  //Raul  Ptr<Boost> boost;
+    Ptr<Boost> boost;
     
 };
 

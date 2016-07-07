@@ -12,6 +12,7 @@ import setproctitle
 
 setproctitle.setproctitle(os.path.basename(os.getcwd()))
 
+# Load weights
 weights = '../../../data/models/VGG_ILSVRC_16_layers.caffemodel'
 
 # init
@@ -26,7 +27,7 @@ interp_layers = [k for k in solver.net.params.keys() if 'up' in k]
 surgery.interp(solver.net, interp_layers)
 
 # scoring
-val = np.loadtxt('../../../data/coco-text/val-onlyLegibleText.txt', dtype=str)
+val = np.loadtxt('../../../data/coco-text/val-onlyLegibleText-500im.txt', dtype=str)
 # val = np.loadtxt('../../../data/icdar-resized/val.txt', dtype=str)
 
 
@@ -76,14 +77,14 @@ for it in range(num_intervals):
         ax2.lines.pop(1)
         ax2.lines.pop(0)
 
-    ax1.plot(it_axes[0:it+1], train_loss[0:it+1], 'b')
-    ax1.plot(it_axes[0:it+1], val_loss[0:it+1], 'r')
-    ax2.plot(it_axes[0:it+1], val_acc[0:it+1], 'y')
-    ax2.plot(it_axes[0:it+1], val_iu[0:it+1], 'g')
+    ax1.plot(it_axes[0:it+1], train_loss[0:it+1], 'b') #Training loss averaged last 20 iterations
+    ax1.plot(it_axes[0:it+1], val_loss[0:it+1], 'r')    #Average validation loss
+    ax2.plot(it_axes[0:it+1], val_acc[0:it+1], 'y') #Average validation accuracy (mean accuracy of text and background)
+    ax2.plot(it_axes[0:it+1], val_iu[0:it+1], 'g')  #Average intersecction over union of score-groundtruth masks
     plt.ion()
     plt.show()
     plt.pause(0.001)
-    title = '../../../data/fcn_training/evaluation/training-' + str(solver.iter) + '.png'
+    title = '../../../data/fcn_training/evaluation/training-' + str(solver.iter) + '.png' #Save graph to disk every "size intervals"
     savefig(title, bbox_inches='tight')
 
 

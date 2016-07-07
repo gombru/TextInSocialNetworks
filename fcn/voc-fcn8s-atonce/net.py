@@ -108,7 +108,7 @@ def make_net():
 
 
     with open('val.prototxt', 'w') as f:
-        f.write(str(fcn('val-onlyLegibleText')))
+        f.write(str(fcn('val-onlyLegibleText-500im')))
         # f.write(str(fcn('val')))
 
 

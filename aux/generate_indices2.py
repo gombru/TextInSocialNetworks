@@ -1,6 +1,6 @@
 import glob, os
 
-dataDir = '/home/imatge/caffe-master/data/coco-text/val2014-withoutIllegible/'
+dataDir = '/home/imatge/caffe-master/data/coco-text/val-withoutIllegible/'
 
 text_file = open("/home/imatge/caffe-master/data/coco-text/val-withoutIllegible.txt", "w")
 

@@ -54,13 +54,18 @@ def getDetections(groundtruth, evaluation, imgIds = [], annIds = [], detection_t
 			gt_box = groundtruth.anns[gt_box_id]['bbox']
 			max_iou = detection_threshold
 			match = None
+			match_region_score = 0
 			for eval_box_id in eval_bboxes:
 				eval_box = evaluation.anns[eval_box_id]['bbox']
 				iou = iou_score(gt_box,eval_box)
 				if iou > max_iou:
-					match = eval_box_id
+					# Edited by raul to assign the tp to the highest ranked score
+					if evaluation.anns[eval_box_id]['score'] > match_region_score:
+						match = eval_box_id
+						match_region_score = evaluation.anns[eval_box_id]['score']
+					# End edition
 			if match:
-				detectRes['true_positives'].append({'gt_id': gt_box_id, 'eval_id': eval_box_id})
+				detectRes['true_positives'].append({'gt_id': gt_box_id, 'eval_id': match, 'my_id': evaluation.anns[match]['my_id']})
 				eval_bboxes.remove(eval_box_id)
 			else:
 				detectRes['false_negatives'].append({'gt_id': gt_box_id})

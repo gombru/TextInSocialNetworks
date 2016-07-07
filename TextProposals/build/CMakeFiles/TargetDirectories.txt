@@ -1,0 +1,2 @@
+/home/imatge/caffe-master/code/TextProposals/build/CMakeFiles/evaluate.dir
+/home/imatge/caffe-master/code/TextProposals/build/CMakeFiles/img2hierarchy.dir
