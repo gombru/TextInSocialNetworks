@@ -1,2 +1,2 @@
-## If created a separated repo for the [TextFCN](https://github.com/gombru/TextFCN).
+## I've created a separated repo for the [TextFCN](https://github.com/gombru/TextFCN).
 Just go there
